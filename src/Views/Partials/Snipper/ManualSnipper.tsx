@@ -234,7 +234,7 @@ export default function ManualSnipper(props: ISnipperParams) {
             })();
         }
 
-        // Check if token needs to approved first 
+        // Check if token needs to be approved first 
         if (!strEqual(selectedTrade?.tokenInfo?.address, ADDR['WETH_ADDRESSA']))
             if (Number(fmWei(tokenAllowance as any)) <= 0) {
                 setButtonText('Approve')

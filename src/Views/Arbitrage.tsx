@@ -223,7 +223,6 @@ export default function Arbitrage() {
                 selected={'NODE'}
                 onSelect={appendTokenForPath}
             />
-
         </Master>
     )
 }
