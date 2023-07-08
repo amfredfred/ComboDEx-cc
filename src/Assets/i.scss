@@ -261,7 +261,7 @@
      border-radius: 6px;
      position: relative;
      width: 100%;
-     background: var(--body-background-color);
+    //  background: var(--body-background-color);
 
      .drop-down-items {
          //  position: absolute;
@@ -621,18 +621,19 @@
      align-items: center;
      justify-content: space-between;
      background: var(--root-lgt-bg);
-     padding: .4rem;
-     box-shadow: 0 0 10px rgba(6, 148, 209, 0.05);
+     //  padding: .4rem;
+     box-shadow: 0 0 10px rgba(6, 209, 152, 0.05);
 
      .active-side {
          border-radius: 50px !important;
          height: 45px !important;
          transition: color 2100ms;
+         font-size: 13px !important;
 
          &:disabled {
              background: transparent !important;
              color: rgb(6, 148, 209);
-             text-shadow: 0 0 10px rgb(6, 148, 209);
+             text-shadow: 0 0 2px rgb(209, 6, 206);
          }
      }
  }
