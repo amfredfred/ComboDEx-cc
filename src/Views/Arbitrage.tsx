@@ -22,7 +22,7 @@ export default function Arbitrage() {
     const [showDexes, setShowDexes] = useState(false)
     const [showTokens, setShowTokens] = useState(false)
     const [isShowingSettings, setisShowingSettings] = useState(false)
-    const [isDiscoverMode, setisDiscoverMode] = useState(true)
+    const [isDiscoverMode, setisDiscoverMode] = useState(false)
     const { dexs } = useDecentralizedExchange()
     const [params, storeParams] = useLocalStorage<IParams>('@Params', Params)
     const { arbitrade: { settings: arbSettings, dexes, amountIn } } = params

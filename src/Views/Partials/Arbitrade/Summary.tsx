@@ -50,22 +50,19 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
         functionName: 'multiPathSwap',
         abi: PRICE_ORACLE,
         address: ADDR['PRICE_ORACLEA'],
-        args: (Object.values(Transactable?.[0] || [])),
+        args: Object.values(Transactable?.[0] || []),
         overrides: {
             // gasLimit: toWei(0.004, 'gwei') as ethers.BigNumber,
             // gasPrice: toWei(10, 'gwei') as ethers.BigNumber,
             // maxFeePerGas: toWei(20, 'gwei') as ethers.BigNumber,
             // maxPriorityFeePerGas: toWei(25, 'gwei') as ethers.BigNumber,
-            value:
-                strEqual(arbitrade?.dexes?.[0]?.paths?.[0]?.symbol?.slice(-3),
-                    chain?.nativeCurrency?.symbol?.slice(-3)) ? toWei(arbitrade?.amountIn, arbitrade?.dexes?.[0]?.paths?.[0]?.decimals) : 0
+            value: toWei(arbitrade?.amountIn, arbitrade?.dexes?.[0]?.paths?.[0]?.decimals)
         },
         cacheTime: 0,
-        enabled:
-            Boolean(Number(arbitrade?.dexes?.[0]?.paths?.length) > 1 &&
-                Number(arbitrade?.dexes?.[arbitrade?.dexes?.length - 1]?.paths?.length) > 1) &&
-            Boolean(Number(fromBalance?.data?.formatted) >= Number(arbitrade?.amountIn) && Number(arbitrade?.amountIn) > 0),
-        staleTime: 0
+        // enabled:
+        //     Boolean(Number(arbitrade?.dexes?.[0]?.paths?.length) > 1 &&
+        //         Number(arbitrade?.dexes?.[arbitrade?.dexes?.length - 1]?.paths?.length) > 1) &&
+        //     Boolean(Number(fromBalance?.data?.formatted) >= Number(arbitrade?.amountIn) && Number(arbitrade?.amountIn) > 0),
     })
 
     const sendSwap = useContractWrite(prepareSwap?.config)
@@ -77,7 +74,6 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
         args: [address, ADDR['PRICE_ORACLEA']],
         enabled: !strEqual(arbitrade?.dexes?.[0]?.paths?.[0]?.address, ADDR?.WETH_ADDRESSA),
         cacheTime: 0,
-        staleTime: 0,
         watch: true,
     })
 
@@ -102,7 +98,7 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
 
     const handleSendTransaction = async () => {
         if (hasAllowance() <= 0)
-            return approve()
+            return approve?.()
         sendSwap?.write?.()
     }
 

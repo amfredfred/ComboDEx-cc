@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from '@mui/material'
-import {  useNetwork } from 'wagmi'
+import { useNetwork } from 'wagmi'
 import useWindowDimensions from '../../Hooks/useWindowDimensions'
 
 
@@ -13,11 +13,11 @@ export default function Footing() {
             <Box className="space-between">
                 {/* <div className="space-between">
                     <Button >
-                        <a target='_' href="https://t.me/yieldTrinity">support</a>
+                        <a target='_' href="https://t.me/combodex">support</a>
                     </Button>
                 </div> */}
                 <small className=" small-text">
-                    &copy; YieldTrinity {String(new Date().getFullYear())}
+                    &copy; ComboDex {String(new Date().getFullYear())}
                 </small>
             </Box>
         </Box>

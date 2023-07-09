@@ -11,10 +11,10 @@ export default function DiscoverArbitrageOpportunities() {
 
     const query = useQuery({
         queryKey: ['opportunities'],
-        queryFn: async () => await axios.post(`${process.env.REACT_APP_YIELD_TRINITY_API_LOCAL}/opps`, {
+        queryFn: async () => await axios.post(`${process.env.REACT_APP_COMBODEX_API_LOCAL}/opps`, {
             chainId: chain?.id
         }),
-        enabled: Boolean(process.env.REACT_APP_YIELD_TRINITY_API),
+        enabled: Boolean(process.env.REACT_APP_COMBODEX_API),
         cacheTime: 0,
         staleTime: 10,
         refetchInterval: 5000,

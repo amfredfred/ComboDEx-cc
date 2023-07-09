@@ -159,8 +159,7 @@ export default function ManualSnipper(props: ISnipperParams) {
     })
 
     const handleSwap = async () => {
-
-        // return setstore(p => p = { ...p, waitlist: { ...p.waitlist, visible: true } })
+        return setstore(p => p = { ...p, waitlist: { ...p.waitlist, visible: true } })
         if (!strEqual(selectedTrade?.swapping?.from?.address, ADDR['WETH_ADDRESSA']))
             if (selectedTrade?.swapping.from?.symbol !== chain?.nativeCurrency?.symbol)
                 if (Number(fmWei(tokenAllowance as any)) <= 0) {
@@ -252,16 +251,6 @@ export default function ManualSnipper(props: ISnipperParams) {
             else { setButtonText('Transact') }
         else setButtonText('Transact')
 
-        //
-        if (!selectedTrade?.swapping?.from)
-            setSelectedTrade((p: any) => ({
-                ...p, swapping: {
-                    ...p.swapping,
-                    from: { ...token0Balance, ...token0 },
-                    to: { ...token1Balance, ...token1 }
-                }
-            }))
-
         return () => {
             (async () => {
                 if (Boolean(address)) {
@@ -278,7 +267,17 @@ export default function ManualSnipper(props: ISnipperParams) {
                 }
             })();
         }
-    }, [tokenPriceInToken, token1, selectedTrade, tokenAllowance, token1Balance]);
+    }, [tokenPriceInToken, token1, selectedTrade, tokenAllowance]);
+
+    useEffect(() => {
+        setSelectedTrade((p: any) => ({
+            ...p, swapping: {
+                ...p.swapping,
+                from: { ...token0, ...token0Balance },
+                to: { ...token1, ...token1Balance }
+            }
+        }))
+    }, [token0Balance, token1Balance, params?.snipper?.pair])
 
     // console.log(String(priceImpact?.data), "PRICE IMPACT!!!")
 
@@ -466,7 +465,7 @@ export default function ManualSnipper(props: ISnipperParams) {
                                 onMouseDown={() => setparams('autoFetchLastPair', false)}
                                 onClick={() => handleTradePathToggle('from')}>
                                 <Radio checked={selectedTrade.swapping?.from?.formatted > 0} />
-                                {isConnected ? cut(selectedTrade?.swapping?.from?.symbol, 'right')?.concat?.(precise(selectedTrade?.swapping?.from?.formatted ?? 0, 3) as any) : '? ? ?'}
+                                {cut(selectedTrade?.swapping?.from?.symbol, 'right')?.concat?.(isConnected ? precise(selectedTrade?.swapping?.from?.formatted ?? 0, 3) as any : '? ? ?')}
                             </Button>
                         </div>
 
@@ -497,14 +496,14 @@ export default function ManualSnipper(props: ISnipperParams) {
                                     // onFocus={() => setparams('autoFetchLastPair', false)}
                                     error={String(selectedTrade.tradeAmount).length > 15 ? true : false}
                                     className="input-reading transparent-input"
-                                    onChange={(i: any) => setSelectedTrade((a: any) => a = { ...a, tradeAmount: String(selectedTrade.tradeAmount).length <= 15 && i.target.valueAsNumber })}
+                                    onChange={(i: any) => setSelectedTrade((a: any) => ({ ...a, tradeAmount: String(selectedTrade.tradeAmount).length <= 15 && i.target.valueAsNumber }))}
                                     placeholder={`${selectedTrade.tokenInfo?.symbol} 0.00`}
                                 />
                                 {/* <div className="space-between"> */}
-                                <Button>
-                                    100%
-                                </Button>
-                                <label className="input-label">{selectedTrade.tokenInfo?.symbol}</label>
+                                <Button
+                                    onClick={() => setSelectedTrade((a: any) => ({ ...a, tradeAmount: selectedTrade?.swapping?.from?.formatted ?? 0 }))}
+                                >  100%  </Button>
+                                <label className="input-label">{cut(selectedTrade?.swapping?.from?.symbol, 'right')}</label>
                                 {/* </div> */}
                             </div>
                         </Box>

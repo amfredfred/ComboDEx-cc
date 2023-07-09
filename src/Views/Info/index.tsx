@@ -12,7 +12,7 @@ export default () => {
             A Contract for Passive Income Generation
           </h2>
           <p className="card-text">
-            Are you ready to maximize the earning potential of your digital assets? Look no further than YieldTrinitySharedWallet - the DeFi platform that harnesses the power of automation and blockchain technology to generate passive income for its users.
+            Are you ready to maximize the earning potential of your digital assets? Look no further than CombodexSharedWallet - the DeFi platform that harnesses the power of automation and blockchain technology to generate passive income for its users.
           </p>
 
           <hr style={{ opacity: .1 }} />
@@ -28,10 +28,10 @@ export default () => {
             Our cutting-edge contract is specifically designed to trade and arbitrage funds on a decentralized exchange (DEX), utilizing automated strategies that take advantage of price inefficiencies and other opportunities to generate profits. This means that you can sit back and watch your digital assets grow without having to lift a finger!
           </p>
           <p className="card-text">
-            With YieldTrinitySharedWallet, you'll no longer have to spend countless hours analyzing market trends or manually executing trades. Our platform offers a stress-free, streamlined approach to passive income generation, reducing the need for time-intensive activities and empowering you to focus on what really matters.
+            With CombodexSharedWallet, you'll no longer have to spend countless hours analyzing market trends or manually executing trades. Our platform offers a stress-free, streamlined approach to passive income generation, reducing the need for time-intensive activities and empowering you to focus on what really matters.
           </p>
           <p className="card-text">
-            So why settle for less? Join the growing number of users who are earning lucrative returns on their digital assets with YieldTrinitySharedWallet. With our secure, transparent, and user-friendly platform, you can unlock the full potential of DeFi and start generating passive income today!
+            So why settle for less? Join the growing number of users who are earning lucrative returns on their digital assets with CombodexSharedWallet. With our secure, transparent, and user-friendly platform, you can unlock the full potential of DeFi and start generating passive income today!
           </p>
         </Box>
       </section>
@@ -39,7 +39,7 @@ export default () => {
       <section className="info-sections" style={{ background: 'transparent' }}>
         <Box className="flexed-dash ">
           <h2 className="headline-2">
-            Few Benefits of YieldTrinityMEVBots
+            Few Benefits of CombodexMEVBots
           </h2>
 
           <div className="cards-wrapper">

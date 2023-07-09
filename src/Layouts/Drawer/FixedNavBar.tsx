@@ -11,11 +11,14 @@ import { useState, useEffect, useRef } from 'react'
 import useWindowDimensions from '../../Hooks/useWindowDimensions';
 import { ExploreOutlined, MenuOpenRounded, RocketLaunch, StackedBarChart } from '@mui/icons-material';
 import useMouseUpEvent from '../../Hooks/useMouseUpEvent';
+import useAssets from '../../Assets';
 
 export default function FixedNavBar() {
     const { innerWidth } = useWindowDimensions()
     const [open, setIsOpen] = useState(false)
     const mmenu = useRef<any>()
+    const { rect_Logo } = useAssets('images') as any
+
     useMouseUpEvent(mmenu.current, () => setIsOpen(o => false), mmenu)
 
     const styles = {
@@ -42,8 +45,12 @@ export default function FixedNavBar() {
     return (
         <div style={{ maxHeight: '90dvh' }} className={`drawer-main-mobile ${open ? 'mobile-menu-toggled' : ''}`} >
             {
-                open && <Link className="path-name" style={{ justifyContent: 'flex-start', paddingInline: '1.6rem' }} to={'/'}>YieldTrinity</Link>
+                open && <a className='site-name' style={{ paddingInline: 10 }} href={window.location.href}>
+                    <img src={rect_Logo} alt="" className="site-logo" />
+                    {/* {innerWidth < 700 ? "YT" : window.location.pathname.replace('#/', '').replace('-', ' ')} */}
+                </a>
             }
+
             <List ref={mmenu} className='drawer-main-mobile-lists'  >
                 <ListItemButton sx={styles.lb}    >
                     <Link to={`../${'dashboard'}`} style={styles.lbl}>
@@ -51,7 +58,7 @@ export default function FixedNavBar() {
                         <ListItemText primary={"Dashboard"} sx={{ opacity: open ? 1 : 0 }} />
                     </Link>
                 </ListItemButton>
-
+ 
                 <ListItemButton sx={styles.lb}  >
                     <Link to={`../${'shared-wallet'}`} style={styles.lbl}>
                         <AccountBalanceIcon />
@@ -75,7 +82,7 @@ export default function FixedNavBar() {
                 </ListItemButton>
 
                 <ListItemButton sx={styles.lb}  >
-                    <Link to={`https://t.me/yieldTrinity`} style={styles.lbl}>
+                    <Link to={`https://t.me/combodex`} style={styles.lbl}>
                         <HelpCenterOutlined />
                         <ListItemText primary={"Community"} sx={{ opacity: open ? 1 : 0 }} />
                     </Link>
@@ -83,7 +90,7 @@ export default function FixedNavBar() {
 
 
                 <ListItemButton sx={styles.lb}  >
-                    <Link to={`../${'info'}`} style={styles.lbl}>
+                    <Link to={`/../${'info'}`} style={styles.lbl}>
                         <InfoOutlinedIcon />
                         <ListItemText primary={"App info"} sx={{ opacity: open ? 1 : 0 }} />
                     </Link>

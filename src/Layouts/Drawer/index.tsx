@@ -36,7 +36,7 @@ export default function MiniDrawer() {
                 className="nav-main">
                 {
                     open ?
-                        <Link className="path-name" style={{ justifyContent: open ? 'flex-start' : 'center', paddingInline: open ? '1rem' : '.6rem' }} to={'/'}>YieldTrinity</Link>
+                        <Link className="path-name" style={{ justifyContent: open ? 'flex-start' : 'center', paddingInline: open ? '1rem' : '.6rem' }} to={'/'}>Combodex</Link>
                         : <Link className="path-name" to={'/'}>YT</Link>
 
                 }
@@ -83,7 +83,7 @@ export default function MiniDrawer() {
                     <List className='nav-ul'>
                         <ListItem key={'help'} className="nav-li">
                             <ListItemButton sx={styles.lb}  >
-                                <Link target='_' to={`https:t.me/yieldTrinity`} className='nav-link' >
+                                <Link target='_' to={`https:t.me/combodex`} className='nav-link' >
                                     <HelpCenterOutlined />
                                     <ListItemText primary={"Info"} className="nav-name" />
                                 </Link>

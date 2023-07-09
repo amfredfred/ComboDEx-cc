@@ -57,6 +57,16 @@
      text-overflow: ellipsis;
      max-height: 100%;
      color: #fafafa;
+
+     max-height: 40px;
+     display: flex;
+     align-items: center;
+
+     .site-logo {
+         object-fit: contain;
+         max-width: 100px;
+         pointer-events: none !important;
+     }
  }
 
  a,
@@ -261,7 +271,7 @@
      border-radius: 6px;
      position: relative;
      width: 100%;
-    //  background: var(--body-background-color);
+     //  background: var(--body-background-color);
 
      .drop-down-items {
          //  position: absolute;
