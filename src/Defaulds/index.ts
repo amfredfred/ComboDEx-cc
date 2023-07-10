@@ -136,8 +136,9 @@ export interface IParams {
     }
 
     waitlist: {
-        keys: "visible" | "account"
+        keys: "visible" | "account" | "airdrop" | "join" | "ICO" | "openTab" | "progress"
         visible: boolean
+        openTab: | "airdrop" | "join" | "ICO" | "progress"
     }
 
     user: {
@@ -172,7 +173,8 @@ export const Params: IParams = {
 
     waitlist: {
         keys: "visible",
-        visible: false
+        visible: false,
+        openTab: 'join'
     },
     user: {
         referee: ''
