@@ -22,12 +22,10 @@ export const Routings = () => {
   const [param] = useSearchParams({ r: '' })
 
   useEffect(() => {
-    const referee = param.get('r')
+    const referee = param.get('ref')
     if (isAddress(String(referee))) {
       storeParams(p => ({ ...p, user: { ...p.user, referee } }))
-      console.log(referee)
     }
-
     return () => { }
   }, [])
 

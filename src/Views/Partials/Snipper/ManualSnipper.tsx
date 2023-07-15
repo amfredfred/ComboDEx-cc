@@ -16,17 +16,17 @@ import { useADDR } from "../../../Ethereum/Addresses";
 import { useEffect, useState } from 'react'
 import { cut, fmWei, isAddress, percentageof, precise, priceDifference, strEqual, sub, toBN, toUpper, toWei } from "../../../Helpers";
 import { motion } from 'framer-motion'
-import { PRICE_ORACLE } from '../../../Ethereum/ABIs/index.ts'
+import { COMBO_ABIs } from '../../../Ethereum/ABIs/index.ts'
 import { NumCompact } from "../../../Helpers";
 import { toast } from 'react-toastify'
 import useDecentralizedExchange from "../../../Hooks/useDecentralizedExchamge";
 import { useLocalStorage } from "usehooks-ts";
 import { IMultiPathTranactionBuillder, ISnipperParams, Params } from "../../../Defaulds";
 import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { wait } from "@testing-library/user-event/dist/utils";
 import DropDown from "../../../Components/Dropdown";
-dayjs.extend(relativeTime)
+dayjs.extend(relativeTime);
 
 export default function ManualSnipper(props: ISnipperParams) {
     const { settings, setparams, dexes } = props
@@ -43,20 +43,21 @@ export default function ManualSnipper(props: ISnipperParams) {
     const [selectedPair, setSelectedPair] = useState({ transactionCount: 0 })
     const [baseTokenBalance, setBaseTokenBalance] = useState<string | number>(0)
 
-    const { data: Pairs } = useContractRead({
-        abi: PRICE_ORACLE,
+    const { data: Pairs, isSuccess: isPairValid, status } = useContractRead({
+        abi: COMBO_ABIs,
         address: ADDR['PRICE_ORACLEA'],
         args: [params?.snipper?.pair],
         functionName: 'getTokensFromPair',
-        watch: true,
+        enabled: Boolean(params?.snipper?.pair),
+        watch: Boolean(params?.snipper?.pair),
     })
 
     const { data: token0 } = useToken({ address: (Pairs as any)?.[0], enabled: Boolean((Pairs as any)?.[0]) })
     const { data: token1 } = useToken({ address: (Pairs as any)?.[1], enabled: Boolean((Pairs as any)?.[1]) })
-    const { data: token0Balance } = useBalance({ address, token: token0?.address, watch: true, enabled: Boolean(address) })
-    const { data: token1Balance } = useBalance({ address, token: token1?.address, watch: true, enabled: Boolean(address) })
-    const { data: token0InPool } = useBalance({ address: params?.snipper?.pair, token: token0?.address, watch: true, enabled: Boolean(token0?.address) })
-    const { data: token1InPool } = useBalance({ address: params?.snipper?.pair, token: token1?.address, watch: true, enabled: Boolean(token1?.address) })
+    const { data: token0Balance } = useBalance({ address, token: token0?.address, watch: true, enabled: Boolean(address && params?.snipper?.pair) })
+    const { data: token1Balance } = useBalance({ address, token: token1?.address, watch: true, enabled: Boolean(address && params?.snipper?.pair) })
+    const { data: token0InPool } = useBalance({ address: params?.snipper?.pair, token: token0?.address, watch: true, enabled: Boolean(token0?.address && params?.snipper?.pair) })
+    const { data: token1InPool } = useBalance({ address: params?.snipper?.pair, token: token1?.address, watch: true, enabled: Boolean(token1?.address && params?.snipper?.pair) })
 
     const [selectedTrade, setSelectedTrade] = useState<any>({
         swapping: {
@@ -73,9 +74,9 @@ export default function ManualSnipper(props: ISnipperParams) {
     }))
 
     const PriceOracleContracts = {
-        abi: PRICE_ORACLE, address: ADDR['PRICE_ORACLEA'], functionName: "priceInToken",
+        abi: COMBO_ABIs, address: ADDR['PRICE_ORACLEA'], functionName: "priceInToken",
         args: [token0?.address, token1?.address, dex.router, dex.FACTORY],
-        watch: true,
+        watch: Boolean(token0?.address && token1?.address),
         enabled: Boolean(token0?.address && token1?.address)
     }
 
@@ -89,37 +90,32 @@ export default function ManualSnipper(props: ISnipperParams) {
 
     const { data: tokenAllowance } = useContractRead({
         address: selectedTrade?.swapping?.from?.address,
-        abi: PRICE_ORACLE,
+        abi: COMBO_ABIs,
         functionName: 'allowance',
         args: [address, ADDR['PRICE_ORACLEA']],
-        watch: true,
+        watch: Boolean(address),
         enabled: Boolean(address)
     })
 
-    const priceImpact = useContractRead({
-        ...PriceOracleContracts,
-        functionName: "priceImpacts", args: [
-            strEqual(selectedTrade?.tokenInfo?.address, token1?.address) ? token1?.address : token0?.address,
-            strEqual(selectedTrade?.tokenInfo?.address, token0?.address) ? token1?.address : token0?.address,
-            [dex.FACTORY],
-            toWei(Number(Number.isNaN(selectedTrade.tradeAmount) ? 0 : selectedTrade.tradeAmount), selectedTrade?.tokenInfo?.decimals)
-        ], watch: true,
-        enabled: Boolean(!Number.isNaN(selectedTrade.tradeAmount)),
-    })
-
     const routeOutput = useContractRead({
-        ...PriceOracleContracts, functionName: "getRouteOutputs", watch: true, enabled: true
+        ...PriceOracleContracts,
+        functionName: "getRouteOutputs",
+        watch: isPairValid,
+        enabled: isPairValid
     })
 
     const predictedFuturePrice = /*predicting future price*/ useContractRead({
-        ...PriceOracleContracts, functionName: "predictFuturePrices", watch: true, enabled: true
+        ...PriceOracleContracts,
+        functionName: "predictFuturePrices",
+        watch: isPairValid,
+        enabled: isPairValid
     })
 
     const { data: lastPair } = useContractRead({
         functionName: 'getLastPair',
-        abi: PRICE_ORACLE,
+        abi: COMBO_ABIs,
         address: ADDR['PRICE_ORACLEA'],
-        watch: true,
+        watch: isPairValid,
         args: [dex?.FACTORY],
         enabled: auto(),
         cacheTime: 0
@@ -128,15 +124,15 @@ export default function ManualSnipper(props: ISnipperParams) {
     const approveTransaction = useContractWrite({
         mode: 'recklesslyUnprepared',
         functionName: 'approve',
-        abi: PRICE_ORACLE,
+        abi: COMBO_ABIs,
         address: selectedTrade?.swapping?.from?.address,
         args: [ADDR['PRICE_ORACLEA'],
-        toWei(selectedTrade.tradeAmount, selectedTrade?.swapping?.from?.decimals)]
+            toWei(selectedTrade.tradeAmount, selectedTrade?.swapping?.from?.decimals)]
     })
 
     const prepareSwap = usePrepareContractWrite({
         functionName: 'swap',
-        abi: PRICE_ORACLE,
+        abi: COMBO_ABIs,
         address: ADDR['PRICE_ORACLEA'],
         args: [
             [selectedTrade?.swapping?.from?.address, selectedTrade?.swapping?.to?.address],
@@ -148,7 +144,8 @@ export default function ManualSnipper(props: ISnipperParams) {
         overrides: {
             value: strEqual(selectedTrade?.swapping?.from?.address, ADDR['WETH_ADDRESSA']) ? toWei(selectedTrade?.tradeAmount) : 0,
         },
-        cacheTime: 0
+        cacheTime: 0,
+        enabled: isPairValid
     })
 
     const swapTransaction = useContractWrite(prepareSwap.config)
@@ -418,7 +415,7 @@ export default function ManualSnipper(props: ISnipperParams) {
             </div>
         </Box>
 
-        {!Pairs ? <h3 className="headline-3" style={{ padding: '2rem', textAlign: 'center' }}>NOT ENOUGH DATA</h3> :
+        {!isPairValid ? <h3 className="headline-3" style={{ padding: '2rem', textAlign: 'center' }}>NOT ENOUGH DATA</h3> :
             <Box>
                 <h3 className="headline-3   space-between" style={{ marginTop: '1rem', marginBottom: 0 }}>
                     {token0?.symbol}/{token1?.symbol}

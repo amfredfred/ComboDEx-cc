@@ -15,6 +15,7 @@
     "@types/node": "^16.18.23",
     "@types/react": "^18.0.34",
     "@types/react-dom": "^18.0.11",
+    "@types/react-share": "^4.0.0",
     "@uauth/js": "^2.7.0",
     "@web3modal/ethereum": "^2.4.1",
     "@web3modal/react": "^2.4.1",
@@ -68,5 +69,5 @@
     "gh-pages": "^5.0.0",
     "sass": "^1.61.0"
   },
-  "homepage": "https://combodex.cc" 
+  "homepage": "https://combodex.cc"
 }

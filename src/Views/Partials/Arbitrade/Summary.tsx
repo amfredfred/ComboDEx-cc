@@ -4,7 +4,7 @@ import { useLocalStorage } from "usehooks-ts";
 import { Params, IParams, IArbitradeRouteBuilder, IContractRead, IDex, ITokenInfo, IMultiPathTranactionBuillder } from "../../../Defaulds";
 import { useEffect, useState } from "react";
 import { usePrepareContractWrite, useNetwork, useWaitForTransaction, useContractWrite, useAccount, useContractRead, useProvider, useSigner, useSignMessage, useBalance } from "wagmi";
-import { PRICE_ORACLE } from "../../../Ethereum/ABIs/index.ts"
+import { COMBO_ABIs } from "../../../Ethereum/ABIs/index.ts"
 import { useADDR } from "../../../Ethereum/Addresses";
 import { fmWei, toWei, strEqual, precise, sub } from "../../../Helpers";
 import { Web3Button } from "@web3modal/react";
@@ -31,7 +31,9 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
         enabled: Boolean(address && arbitrade?.dexes?.[0]?.paths?.[0]?.address),
         token: arbitrade?.dexes?.[0]?.paths?.[0]?.address as any
     })
-
+    const setparams = (key: IParams['waitlist']['keys'], val: any) => {
+        storeParams((p: any) => ({ ...p, waitlist: { ...p.waitlist, [key]: val } }))
+    }
     const Builder = {
         _paths: [], _pathLengths: [], _routes: [], _inputes: [], _minOutputs: [], _deadline: 100,
     } as IMultiPathTranactionBuillder
@@ -48,7 +50,7 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
 
     const prepareSwap = usePrepareContractWrite({
         functionName: 'multiPathSwap',
-        abi: PRICE_ORACLE,
+        abi: COMBO_ABIs,
         address: ADDR['PRICE_ORACLEA'],
         args: Object.values(Transactable?.[0] || []),
         overrides: {
@@ -69,7 +71,7 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
 
     const { data: tokenAllowance } = useContractRead({
         address: arbitrade?.dexes?.[0]?.paths?.[0]?.address as any,
-        abi: PRICE_ORACLE,
+        abi: COMBO_ABIs,
         functionName: 'allowance',
         args: [address, ADDR['PRICE_ORACLEA']],
         enabled: !strEqual(arbitrade?.dexes?.[0]?.paths?.[0]?.address, ADDR?.WETH_ADDRESSA),
@@ -80,7 +82,7 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
     const { write: approve, data: approvalData, isLoading: isApproving } = useContractWrite({
         mode: 'recklesslyUnprepared',
         functionName: 'approve',
-        abi: PRICE_ORACLE,
+        abi: COMBO_ABIs,
         address: arbitrade?.dexes?.[0]?.paths?.[0]?.address as any,
         args: [ADDR['PRICE_ORACLEA'], toWei(5e10)],
     })
@@ -97,6 +99,7 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
     }
 
     const handleSendTransaction = async () => {
+        return setparams('visible', true)
         if (hasAllowance() <= 0)
             return approve?.()
         sendSwap?.write?.()
@@ -104,7 +107,7 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
 
     const requiredOuput = useContractRead({
         functionName: "getRouteOutputs",
-        abi: PRICE_ORACLE,
+        abi: COMBO_ABIs,
         // address: ADDR['PRICE_ORACLEA'] as any,
         // args: [[arbitrade?.dexes?.[arbitrade?.dexes?.length - 1]?.router],
         // arbitrade?.dexes?.[arbitrade?.dexes?.length - 1]?.paths?.map((p: ITokenInfo) => p?.address)?.reverse() || [],
@@ -172,7 +175,7 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
     useEffect(() => {
 
         if (arbitrade?.settings?.auto) {
-            // const contract = new ethers.Contract(ADDR['PRICE_ORACLEA'], PRICE_ORACLE, signer?.data as any)
+            // const contract = new ethers.Contract(ADDR['PRICE_ORACLEA'], COMBO_ABIs, signer?.data as any)
             setInterval(async () => {
                 if (sendSwap?.isLoading) return
                 // const tnx = await contract.multiPathSwap(...Object.values(Transactable?.[0] || []),

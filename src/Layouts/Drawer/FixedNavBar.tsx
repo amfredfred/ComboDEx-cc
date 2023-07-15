@@ -9,10 +9,11 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 import { Link } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import useWindowDimensions from '../../Hooks/useWindowDimensions';
-import { ExploreOutlined, MenuOpenRounded, RocketLaunch, StackedBarChart } from '@mui/icons-material';
+import { DocumentScanner, ExploreOutlined, MenuOpenRounded, People, RocketLaunch, StackedBarChart } from '@mui/icons-material';
 import useMouseUpEvent from '../../Hooks/useMouseUpEvent';
 import useAssets from '../../Assets';
-
+import { useCopyToClipboard, useLocalStorage } from "usehooks-ts";
+import { IParams, Params } from "../../Defaulds";
 export default function FixedNavBar() {
     const { innerWidth } = useWindowDimensions()
     const [open, setIsOpen] = useState(false)
@@ -20,7 +21,10 @@ export default function FixedNavBar() {
     const { rect_Logo } = useAssets('images') as any
 
     useMouseUpEvent(mmenu.current, () => setIsOpen(o => false), mmenu)
-
+    const [params, storeParams] = useLocalStorage<IParams>('@Params', Params)
+    const setparams = (key: IParams['waitlist']['keys'], val: any) => {
+        storeParams((p: any) => ({ ...p, waitlist: { ...p.waitlist, [key]: val } }))
+    }
     const styles = {
         lb: {
             minHeight: 48,
@@ -52,13 +56,21 @@ export default function FixedNavBar() {
             }
 
             <List ref={mmenu} className='drawer-main-mobile-lists'  >
+
+                <ListItemButton sx={styles.lb} onClick={() => setparams('visible', true)} >
+                    <Link to={`#`} className='nav-link' >
+                        🎁
+                        <ListItemText className="nav-name clock-wait" primary={"Free-COF"} />
+                    </Link>
+                </ListItemButton>
+
                 <ListItemButton sx={styles.lb}    >
                     <Link to={`../${'dashboard'}`} style={styles.lbl}>
                         <DashboardIcon />
                         <ListItemText primary={"Dashboard"} sx={{ opacity: open ? 1 : 0 }} />
                     </Link>
                 </ListItemButton>
- 
+
                 <ListItemButton sx={styles.lb}  >
                     <Link to={`../${'shared-wallet'}`} style={styles.lbl}>
                         <AccountBalanceIcon />
@@ -82,17 +94,17 @@ export default function FixedNavBar() {
                 </ListItemButton>
 
                 <ListItemButton sx={styles.lb}  >
-                    <Link to={`https://t.me/combodex`} style={styles.lbl}>
-                        <HelpCenterOutlined />
-                        <ListItemText primary={"Community"} sx={{ opacity: open ? 1 : 0 }} />
+                    <Link to={`https://t.me/combodex_chat`} style={styles.lbl}>
+                        <People />
+                        <ListItemText primary={"Combo Chat"} sx={{ opacity: open ? 1 : 0 }} />
                     </Link>
                 </ListItemButton>
 
 
                 <ListItemButton sx={styles.lb}  >
-                    <Link to={`/../${'info'}`} style={styles.lbl}>
-                        <InfoOutlinedIcon />
-                        <ListItemText primary={"App info"} sx={{ opacity: open ? 1 : 0 }} />
+                    <Link to={`https://combodex.gitbook.io/home/`} style={styles.lbl}>
+                        <DocumentScanner />
+                        <ListItemText primary={"DOC"} sx={{ opacity: open ? 1 : 0 }} />
                     </Link>
                 </ListItemButton>
             </List>

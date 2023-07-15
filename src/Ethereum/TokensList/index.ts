@@ -1,6 +1,13 @@
-const ETH_MAINNET = [
+export interface ITokens {
+    address: string
+    name: string
+    symbol: string
+    decimals: number
+    logoURI: string
+}
+
+const ETH_MAINNET: ITokens[] = [
     {
-        "chainId": 1,
         "address": "0x4d224452801ACEd8B2F0aebE155379bb5D594381",
         "name": "ApeCoin",
         "symbol": "APE",
@@ -15,7 +22,7 @@ const ETH_MAINNET = [
     }
 ]
 
-const POLYGON_MAINNET = [
+const POLYGON_MAINNET: ITokens[] = [
     { "address": "0xc2132D05D31c914a87C6611C10748AEb04B58e8F", "name": "Tether USD (POS)", "symbol": "USDT", "decimals": 6, "logoURI": "https://raw.githubusercontent.com/compound-finance/token-list/master/assets/asset_USDC.svg" },
     { "address": "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063", "name": "Dai Stablecoin (PoS)", "symbol": "DAI", "decimals": 18, "logoURI": "https://raw.githubusercontent.com/compound-finance/token-list/master/assets/asset_DAI.svg" },
     { "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174", "name": "USD Coin (PoS)", "symbol": "USDC", "decimals": 6, "logoURI": "https://raw.githubusercontent.com/compound-finance/token-list/master/assets/asset_USDC.svg" },
@@ -49,7 +56,7 @@ const POLYGON_MAINNET = [
     }
 ]
 
-const BSC_MAINNET = [
+const BSC_MAINNET: ITokens[] = [
     {
         "name": "BTCB",
         "address": "0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c",
@@ -89,7 +96,7 @@ const BSC_MAINNET = [
     }
 ]
 
-const BSC_TESTNET = [
+const BSC_TESTNET: ITokens[] = [
     { "address": "0x6ce8dA28E2f864420840cF74474eFf5fD80E65B8", "name": "BTCB Token", "symbol": "BTCB", "decimals": 18, "logoURI": "https://s2.coinmarketcap.com/static/img/coins/64x64/2837.png" },
     { "address": "0xEC5dCb5Dbf4B114C9d0F65BcCAb49EC54F6A0867", "name": "Dai Token", "symbol": "DAI", "decimals": 18, logoURI: "https://raw.githubusercontent.com/compound-finance/token-list/master/assets/asset_DAI.svg" },
     { "address": "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd", "name": "USDT Token", "symbol": "USDT", "decimals": 18, "logoURI": "https://raw.githubusercontent.com/compound-finance/token-list/master/assets/asset_USDC.svg" },
@@ -97,9 +104,9 @@ const BSC_TESTNET = [
     { "address": "0x78867BbEeF44f2326bF8DDd1941a4439382EF2A7", "name": "BUSD Token", "symbol": "BUSD", "decimals": 18, "logoURI": "https://raw.githubusercontent.com/compound-finance/token-list/master/assets/asset_USDC.svg" },
 ]
 
-export const tokensList = {
+export const tokensList: { [key: number]: ITokens[] } = {
     [97]: BSC_TESTNET,
     [56]: BSC_MAINNET,
     [1]: ETH_MAINNET,
     [137]: POLYGON_MAINNET
-}
+}   

@@ -4,8 +4,8 @@ import PancakeSwapIcons from '../../Assets/image/pancakeswap-cake-logo.png'
 import SushiSwapIcons from '../../Assets/image/sushiswap-logo.png'
 import QuickswapIcons from '../../Assets/image/quickswap-icon.jpg'
 import ApeSwapIcons from '../../Assets/image/apeswap.png'
-import { tokensList } from "../TokensList";
-
+import { tokensList, ITokens } from "../TokensList";
+import { ITokenInfo } from "../../Defaulds"
 
 enum NETWORKS {
     AVAX = 43114,
@@ -15,13 +15,31 @@ enum NETWORKS {
     BSC_TESTNET = 97
 }
 
+export interface IAddresses {
+    SHARED_WALLET: any
+    PRICE_ORACLEA: any
+    WETH_ADDRESSA: any
+    TOKENS: ITokens[]
+    COMBO_HELPER: any
+    COMBO_TOKEN: any
+    DEXS: {
+        router: string
+        FACTORY: string
+        ICON: string
+        NAME: string
+        SYMBOL: string
+    }[]
+}
+
 const AVAILABLE_CHAINS = [NETWORKS.AVAX, NETWORKS.FANTOM, NETWORKS.ETH, NETWORKS.AETH, NETWORKS.BSC_TESTNET];
 
-const ETH_MAINNET = {
+const ETH_MAINNET: IAddresses = {
     SHARED_WALLET: "",
     PRICE_ORACLEA: "",
     WETH_ADDRESSA: "",
     TOKENS: tokensList[1],
+    COMBO_HELPER: "",
+    COMBO_TOKEN: "",
     DEXS: [
         {
             router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
@@ -47,11 +65,13 @@ const ETH_MAINNET = {
     ]
 }
 
-const POLYGON_MAINNET = {
+const POLYGON_MAINNET: IAddresses = {
     SHARED_WALLET: "",
     PRICE_ORACLEA: "0x7f379eC5914476D919E1F38bC904FC07A49b3A2D",
     WETH_ADDRESSA: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
     TOKENS: tokensList[137],
+    COMBO_HELPER: "",
+    COMBO_TOKEN: "",
     DEXS: [
         {
             router: "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",
@@ -76,11 +96,13 @@ const POLYGON_MAINNET = {
     ]
 }
 
-const BSC_MAINNET = {
+const BSC_MAINNET: IAddresses = {
     SHARED_WALLET: "",
     PRICE_ORACLEA: "0x7f379eC5914476D919E1F38bC904FC07A49b3A2D",
     WETH_ADDRESSA: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
     TOKENS: tokensList[56],
+    COMBO_HELPER: "",
+    COMBO_TOKEN: "",
     DEXS: [
         {
             router: "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
@@ -106,10 +128,12 @@ const BSC_MAINNET = {
     ]
 }
 
-const BSC_TESTNET = {
+const BSC_TESTNET: IAddresses = {
     SHARED_WALLET: "0xE66B70549FDc0278877E91D007E33d5b6A32b682",
     PRICE_ORACLEA: "0x0Ac4C22AefAB3C8b0A9ca7A0Dc77E825709A0Cb7",
     WETH_ADDRESSA: "0xae13d989dac2f0debff460ac112a837c89baa7cd",
+    COMBO_HELPER: "0x0f692e9e3F1CfE3B10E7bA0E841566b2917b75CA",
+    COMBO_TOKEN: "0xd2821885374C9d198C31FE5A8caC48d8b34E7D8f",
     TOKENS: tokensList[97],
     DEXS: [
         {
@@ -137,7 +161,7 @@ const ADDRESSES = {
 }
 
 
-export const useADDR = (chainID?: number | undefined) => {
+export const useADDR = (chainID?: number | undefined): IAddresses => {
     const { chain } = useNetwork()
     return (ADDRESSES as any)?.[AVAILABLE_CHAINS[chainID as number]] ?? (ADDRESSES as any)?.[(chain as any)?.id] ?? ADDRESSES[97]
 }

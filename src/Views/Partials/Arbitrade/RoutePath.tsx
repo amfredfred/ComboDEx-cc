@@ -1,7 +1,7 @@
 import { useContractRead, useNetwork } from "wagmi"
 import { IContractRead, IDex, IParams, Params } from "../../../Defaulds"
 import { useADDR } from "../../../Ethereum/Addresses"
-import { PRICE_ORACLE } from "../../../Ethereum/ABIs/index.ts"
+import { COMBO_ABIs } from "../../../Ethereum/ABIs/index.ts"
 import { fmWei, precise, toWei } from "../../../Helpers"
 import { useEffect } from "react"
 import { useLocalStorage } from "usehooks-ts"
@@ -32,7 +32,7 @@ export default function ArbitrageRoutePath(props: { dex: IDex, dexId: number }) 
 
     const target: IContractRead = {
         functionName: "_getRouteOutput",
-        abi: PRICE_ORACLE,
+        abi: COMBO_ABIs,
         address: ADDR['PRICE_ORACLEA'] as any,
         args: [
             dex?.router,

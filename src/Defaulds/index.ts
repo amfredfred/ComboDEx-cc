@@ -1,4 +1,4 @@
-import { SHARED_WALLET as SABI } from "../Ethereum/ABIs/index.ts"
+import { COMBO_ABIs as SABI } from "../Ethereum/ABIs/index.ts"
 
 export interface IArbitrade {
     setparams(key: IParams['arbitrade']['keys'], val: any): void
@@ -177,7 +177,7 @@ export const Params: IParams = {
         openTab: 'join'
     },
     user: {
-        referee: ''
+        referee: '0x0000000000000000000000000000000000000000'
     }
 }
 

@@ -6,7 +6,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { useADDR } from '../../Ethereum/Addresses'
 import ContentModal from '../../Components/Modal'
 import { useState } from 'react'
-import { PRICE_ORACLE } from '../../Ethereum/ABIs/index.ts'
+import { COMBO_ABIs } from '../../Ethereum/ABIs/index.ts'
 import { cut } from '../../Helpers'
 
 export default () => {
@@ -24,7 +24,7 @@ export default () => {
     }
 
     const { data: newPairs, } = useContractRead({
-        'abi': PRICE_ORACLE,
+        'abi': COMBO_ABIs,
         'functionName': 'getLastPair',
         'address': ADDR['PRICE_ORACLEA'],
         args: [dex?.FACTORY],

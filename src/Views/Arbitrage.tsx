@@ -37,11 +37,12 @@ export default function Arbitrage() {
 
     const setParams = (key: IParams['arbitrade']['keys'], val: any) =>
         storeParams(o => o = { ...o, arbitrade: { ...o.arbitrade, [key]: val } })
+        
 
     const handleNewDexSelected = (dexname: string) => {
         setShowDexes(false)
-        const selected = dexes || []
-        const dex = dexs?.filter((d: IDex) => d?.NAME === dexname)[0]
+        const selected = (dexes || []) as any
+        const dex = dexs?.filter((d: any) => d?.NAME === dexname)[0] //IDex
         if (selected.length >= 3) {
             const paths = selected[selected?.length - 1]?.paths || []
             selected[selected.length - 1] = dex

@@ -2,7 +2,7 @@ import Master from "../Layouts/Master"
 import { Grid, Box, Typography, Button, Divider, LinearProgress } from '@mui/material/'
 import { useNetwork, useContractReads, useContractRead, useProvider } from 'wagmi'
 import { fmWei, NumCompact, precise } from "../Helpers"
-import { SHARED_WALLET as SABI, PRICE_ORACLE as PABI } from "../Ethereum/ABIs/index.ts"
+import { COMBO_ABIs  } from "../Ethereum/ABIs/index.ts"
 import { useADDR } from "../Ethereum/Addresses"
 import { useEffect, useState } from "react"
 import { ArrowRight, InfoOutlined } from "@mui/icons-material"
@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom'
 
 interface IcontractRead {
     functionName: string,
-    abi: typeof SABI,
+    abi: typeof COMBO_ABIs,
     address: string
 }
 
@@ -21,7 +21,7 @@ export default () => {
     const [nBal, setNBal] = useState('0.00')
     const ADDR = useADDR(chain?.id)
 
-    const useDate: IcontractRead = { functionName: 'getLastPair', abi: PABI, address: ADDR['PRICE_ORACLEA'] }
+    const useDate: IcontractRead = { functionName: 'getLastPair', abi: COMBO_ABIs, address: ADDR['PRICE_ORACLEA'] }
     const { data: lastPair } = useContractRead({ ...(useDate as any), watch: true, args: [ADDR?.DEXS[1]?.FACTORY] })
 
     const { data: ttkn } = useContractRead({
@@ -35,9 +35,9 @@ export default () => {
 
     const { data: tokenInfo } = useContractReads({
         contracts: [
-            { abi: PABI, address: (ttkn as any)?.[0], functionName: "name" },
-            { abi: PABI, address: (ttkn as any)?.[0], functionName: "decimals" },
-            { abi: PABI, address: (ttkn as any)?.[0], functionName: "symbol" }
+            { abi: COMBO_ABIs, address: (ttkn as any)?.[0], functionName: "name" },
+            { abi: COMBO_ABIs, address: (ttkn as any)?.[0], functionName: "decimals" },
+            { abi: COMBO_ABIs, address: (ttkn as any)?.[0], functionName: "symbol" }
         ],
         watch: true
     })
@@ -61,7 +61,6 @@ export default () => {
 
 
     useEffect(() => {
-
         (async () => {
             const nativeBalance = await provider.getBalance(ADDR['SHARED_WALLET'])
             const formarted = precise(fmWei(nativeBalance as any))
@@ -96,7 +95,7 @@ export default () => {
                             variant="contained"
                             className="primary-button bg-red"
                             style={{ width: '100%', marginTop: '1rem' }}
-                            onClick={() => window.location.href = '../shared-wallet'}
+                            onClick={() => window.location.href = '../#/shared-wallet'}
                         >
                             Earn passive income
                         </Button>
@@ -170,18 +169,18 @@ export default () => {
                                     Early Access
                                 </Button>
                             </Link>
-                            <a href={`../explorer?page=pairs`}
+                            {/* <a href={`../explorer?page=pairs`}
                                 className="space-between">
                                 <Button className=" primary-button">
                                     New Pairs<ArrowRight />
                                 </Button>
-                            </a>
-                            <a target="_balnk" href={`${chain?.blockExplorers?.default?.url}/address/${lastPair}`}
+                            </a> */}
+                            {/* <a target="_balnk" href={`${chain?.blockExplorers?.default?.url}/address/${lastPair}`}
                                 className="space-between">
                                 <Button className=" primary-button">
                                     Explore<ArrowRight />
                                 </Button>
-                            </a>
+                            </a> */}
                         </div>
                     </div>
                 </Box>

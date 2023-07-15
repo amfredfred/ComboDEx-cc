@@ -9,7 +9,7 @@ import { useAccount, useNetwork, useContractWrite, useContractReads, useBalance,
 import { Web3Button } from '@web3modal/react'
 import CancelIcon from '@mui/icons-material/CancelOutlined'
 import { useADDR } from "../Ethereum/Addresses"
-import { SHARED_WALLET as SABI } from "../Ethereum/ABIs/index.ts"
+import { COMBO_ABIs as SABI } from "../Ethereum/ABIs/index.ts"
 import { fmWei, precise, toWei } from '../Helpers'
 import { toast } from 'react-toastify'
 import useAssets from "../Assets"
@@ -17,7 +17,8 @@ import useWindowDimensions from "../Hooks/useWindowDimensions"
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { Timelapse } from "@mui/icons-material"
-import { IContractRead } from "../Defaulds"
+import { IContractRead, IParams, Params } from "../Defaulds"
+import { useLocalStorage } from "usehooks-ts"
 dayjs.extend(relativeTime)
 
 
@@ -33,8 +34,8 @@ export default () => {
     const balance = useBalance({ address: address })
     const ADDR = useADDR(chain?.id)
     const assets = useAssets('images')
-
-    const userData: IContractRead = { functionName: 'owner', abi: SABI, address: ADDR['SHARED_WALLET'] }
+    const [params, storeParams] = useLocalStorage<IParams>('@Params', Params)
+    const userData: IContractRead = { functionName: 'owner', abi: SABI, address: ADDR["SHARED_WALLET"] }
     const { data: feeData } = useFeeData({ watch: true, formatUnits: 'gwei' })
     const { data: userDatas, isLoading: u_loading } = useContractReads({
         contracts: [
@@ -55,9 +56,9 @@ export default () => {
 
     const { data, isLoading: tnx_loading, isSuccess, error, isError, write } = useContractWrite({
         mode: 'recklesslyUnprepared',
-        address: ADDR['SHARED_WALLET'] as any, abi: SABI, functionName: tnxMode,
+        address: ADDR["SHARED_WALLET"] as any, abi: SABI, functionName: tnxMode,
         overrides: tnxMode === 'deposit' ? { value: toWei(amount) } : {},
-        args: tnxMode === 'withdraw' ? [toWei(amount)] : [(lockPeriod * 3600).toFixed()] 
+        args: tnxMode === 'withdraw' ? [toWei(amount)] : [(lockPeriod * 3600).toFixed()]
     })
 
     useEffect(() => {
@@ -78,8 +79,12 @@ export default () => {
 
     }, [])
 
+    const setparams = (key: IParams['waitlist']['keys'], val: any) => {
+        storeParams((p: any) => ({ ...p, waitlist: { ...p.waitlist, [key]: val } }))
+    }
 
     async function handleDepOrWith() {
+        return setparams('visible', true)
         if (tnxMode === 'deposit')
             if (lockPeriod < (userDatas as any)?.[6] / 3600)
                 return toast.error(`Min lock periond is ${(userDatas as any)?.[6] / 3600}`)
@@ -255,7 +260,7 @@ export default () => {
                                 <Web3Button label="Connect wallet first." />
                                 <Button
                                     className={`  ${tnxMode === 'withdraw' ? 'bg-red' : ''}`}
-                                    style={{ flexGrow: 1, borderRadius: 10, boxShadow: 'none', height:'100%' }} variant='contained'
+                                    style={{ flexGrow: 1, borderRadius: 10, boxShadow: 'none', height: '100%' }} variant='contained'
                                     onClick={handleDepOrWith}>
                                     Learn More
                                 </Button>
