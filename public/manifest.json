@@ -1,6 +1,6 @@
 {
   "short_name": "Combo Dex",
-  "name": "Combo Dex - crypto snipping protocol",
+  "name": "Combo Dex - arbitrage and crypto token launch snipping protocol",
   "icons": [
     {
       "src": "favicon.ico",
@@ -13,6 +13,6 @@
   "theme_color": "#000000",
   "background_color": "#ffffff",
   "images":{
-    "card_image":"card-image.jpg"
+    "card_image":"marketing-banner.png"
   }
 }

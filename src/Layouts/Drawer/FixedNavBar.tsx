@@ -58,9 +58,9 @@ export default function FixedNavBar() {
             <List ref={mmenu} className='drawer-main-mobile-lists'  >
 
                 <ListItemButton sx={styles.lb} onClick={() => setparams('visible', true)} >
-                    <Link to={`#`} className='nav-link' >
+                    <Link to={`#`} style={styles.lbl} >
                         🎁
-                        <ListItemText className="nav-name clock-wait" primary={"Free-COF"} />
+                        <ListItemText primary={"Free-COF"} sx={{ opacity: open ? 1 : 0 }} />
                     </Link>
                 </ListItemButton>
 

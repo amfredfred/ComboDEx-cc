@@ -15,7 +15,7 @@ export default function ({ children }: { children: React.ReactNode }) {
     const projectId = (process.env.REACT_APP_WAGMI_APP_ID) as any
 
     const { chains, provider } = configureChains(
-        [bscTestnet, polygon, bsc],//arbitrum, mainnet, polygon,
+        [bscTestnet, bsc],//arbitrum, mainnet, polygon,
         [publicProvider()]
     );
 

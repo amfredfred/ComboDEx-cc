@@ -5,6 +5,7 @@ import SyncCode from './image/sync.png'
 import RectLogo from './image/comboex-art.png'
 import TwitterIcon from './image/twitter-icon.png'
 import TelegramIcon from './image/telegram-icon.png'
+import ComboIcon from './image/combodex-logo.png'
 
 interface IAssets {
     images?: {
@@ -19,7 +20,8 @@ export default function useAssets(get?: "images"): IAssets  {
         'sync_code': SyncCode,
         'rect_Logo': RectLogo,
         'twitter_icon': TwitterIcon,
-        'telegram_icon': TelegramIcon
+        'telegram_icon': TelegramIcon,
+        'combo_icon': ComboIcon
     }
     if (get === 'images') return images
     return { images, }

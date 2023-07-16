@@ -188,7 +188,7 @@ export default function Arbitrage() {
                         </small>
                     </Box>
 
-                    <Box className="dash-main-box box-stats transparent sticky-top">
+                    {/* <Box className="dash-main-box box-stats transparent sticky-top">
                         <div className="space-between">
                             <span> </span>
                             <Button
@@ -197,7 +197,7 @@ export default function Arbitrage() {
                                 {isDiscoverMode ? "Arbitrade" : "Discover"} <ArrowRight />
                             </Button>
                         </div>
-                    </Box>
+                    </Box> */}
                 </Box>
 
 

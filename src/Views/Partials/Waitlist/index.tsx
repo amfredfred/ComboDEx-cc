@@ -11,7 +11,7 @@ import { toast } from 'react-toastify'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import { COMBO_ABIs } from "../../../Ethereum/ABIs/index.ts";
 import { useADDR } from "../../../Ethereum/Addresses";
-import { Web3NetworkSwitch } from '@web3modal/react'
+import { Web3Button, Web3NetworkSwitch, useWeb3Modal } from '@web3modal/react'
 import useAssets from "../../../Assets";
 
 dayjs.extend(relativeTime)
@@ -19,6 +19,7 @@ dayjs.extend(relativeTime)
 export default function WaitListModal() {
     const [params, storeParams] = useLocalStorage<IParams>('@Params', Params)
     const [clipBoardContent, copyToClipboard] = useCopyToClipboard()
+    const { open, isOpen } = useWeb3Modal()
     const { address, isConnected } = useAccount()
     const { images } = useAssets()
     const { chain, } = useNetwork()
@@ -43,8 +44,8 @@ export default function WaitListModal() {
             { abi: COMBO_ABIs as any, functionName: '_freebieStartDate', address: ADDR['COMBO_HELPER'] },
             { abi: COMBO_ABIs as any, functionName: '_mintkns', address: ADDR['COMBO_HELPER'] },
             { abi: COMBO_ABIs as any, functionName: '_maxtkns', address: ADDR['COMBO_HELPER'] },
-            { abi: COMBO_ABIs as any, functionName: '_icoStartDate', address: ADDR['COMBO_HELPER'] },
             { abi: COMBO_ABIs as any, functionName: '_icoEndDate', address: ADDR['COMBO_HELPER'] },
+            { abi: COMBO_ABIs as any, functionName: '_icoStartDate', address: ADDR['COMBO_HELPER'] },
             { abi: COMBO_ABIs as any, functionName: '_rate', address: ADDR['COMBO_HELPER'] },
             { abi: COMBO_ABIs as any, functionName: 'leadboard', address: ADDR['COMBO_HELPER'], args: [address] },
             { abi: COMBO_ABIs as any, functionName: 'getLeaderboardSize', address: ADDR['COMBO_HELPER'] },
@@ -68,12 +69,14 @@ export default function WaitListModal() {
         address: ADDR['COMBO_HELPER'],
         functionName: 'claimCombodexAirdrop',
         args: [params?.user?.referee ?? ADDR['COMBO_HELPER']],
-        enabled: params?.waitlist?.openTab === 'airdrop' && params.waitlist.visible
+        enabled: params?.waitlist?.openTab === 'airdrop' && params.waitlist.visible,
+        cacheTime: 0,
     })
     const claimHook = useContractWrite(claimPrepHook?.data)
     const waitClaimhook = useWaitForTransaction({
         hash: claimHook?.data?.hash,
-        enabled: params.waitlist.visible && params?.waitlist?.openTab === 'airdrop'
+        enabled: params.waitlist.visible && params?.waitlist?.openTab === 'airdrop',
+        cacheTime: 0
     })
 
     //
@@ -84,15 +87,19 @@ export default function WaitListModal() {
         overrides: {
             value: toWei(amountEth)
         },
-        enabled: params?.waitlist?.openTab === 'ICO' && params.waitlist.visible
+        enabled: params?.waitlist?.openTab === 'ICO' && params.waitlist.visible,
+        cacheTime: 0
     })
     const buyHook = useContractWrite(buyPrepHook.data)
     const waitBuyhook = useWaitForTransaction({
         hash: buyHook?.data?.hash,
-        enabled: params.waitlist.visible && params?.waitlist?.openTab === 'ICO'
+        enabled: params.waitlist.visible && params?.waitlist?.openTab === 'ICO',
+        cacheTime: 0
     })
     //
     const handleCliamTokens = () => {
+        if (claimPrepHook?.isIdle)
+            return toast.warn("Wait... 🛑")
         if (claimPrepHook.error) {
             setShowingReferral(true)
             return toast.error(String((claimPrepHook?.error as any)?.reason))
@@ -101,9 +108,10 @@ export default function WaitListModal() {
     }
 
     const handleBuyTokens = () => {
-        if (buyPrepHook.error) {
+        if (buyPrepHook?.isIdle)
+            return toast.warn("Wait... 🛑")
+        if (buyPrepHook.isError)
             return toast.error(String((buyPrepHook?.error as any)?.reason))
-        }
         buyHook?.write?.()
     }
 
@@ -137,6 +145,7 @@ export default function WaitListModal() {
         }
 
         isConnected || setparams('visible', false)
+        params?.waitlist?.openTab || setparams('openTab', 'airdrop')
 
         return () => {
             ; (async () => {
@@ -191,7 +200,7 @@ export default function WaitListModal() {
 
                 <div className="stats-dash-flexed-box halve-flex" data-name='🎁'>
                     <Typography className="balance-overview-text" component='h2'>
-                        {precise(fmWei((AInfo?.data?.[10] as any)?.tokensClaimed), 1)} COF
+                        {precise(fmWei((AInfo?.data?.[10] as any)?.tokensClaimed), 1)}
                     </Typography>
                     <Typography component='p'>
                         <span className="orangered">
@@ -201,7 +210,7 @@ export default function WaitListModal() {
                 </div>
                 <div className="stats-dash-flexed-box halve-flex" data-name='🏦'>
                     <Typography className="balance-overview-text" component='h4'>
-                        {precise(reserveed?.formatted, 1)} COF
+                        {precise(reserveed?.formatted, 1)}
                     </Typography>
                     <Typography component='p'>
                         <span className="green">RESERVE</span>
@@ -217,14 +226,14 @@ export default function WaitListModal() {
                     </Typography>
                 </div>
 
-                <div className="stats-dash-flexed-box halve-flex" data-name={"⏲️"}>
+                {!(AInfo?.data?.[10] as any)?.claimTIme || <div className="stats-dash-flexed-box halve-flex" data-name={"⏲️"}>
                     <Typography className="balance-overview-text" component='h4'>
                         {dayjs((AInfo?.data?.[10] as any)?.claimTIme * 1000).fromNow()}
                     </Typography>
                     <Typography component='p'>
                         <span className="green">ENTRY TIME</span>
                     </Typography>
-                </div>
+                </div>}
             </div>
             <hr style={{ opacity: .2 }} />
             {
@@ -254,32 +263,39 @@ export default function WaitListModal() {
                     </div>
                 </motion.div>
             }
-            <div className="space-between" >
-                <motion.div
-                    initial={{ x: -100 }}
-                    animate={{ x: 0 }}
-                    exit={{ x: 100 }}>
-                    <Button
-                        style={{ fontSize: 10 }}
-                        disableElevation
-                        disabled={waitClaimhook?.isLoading || claimHook?.isError}
-                        onClick={handleCliamTokens}
-                        variant="contained"
-                    >
-                        CLAIM &nbsp;&nbsp;<span style={{ color: 'orangered' }}> {fmWei(AInfo?.data?.[2] as any)} COF </span>
-                        &nbsp;{!waitClaimhook?.isLoading || <CircularProgress size={15} color="info" />}
-                    </Button>
-                </motion.div>
 
-                <Button
-                    style={{ fontSize: 10 }}
-                    disableElevation
-                    onClick={() => setShowingReferral(s => !s)} className="box-navigation-btn"
-                    color="warning" >
-                    EARN ${200}{ShowingReferral ? <ArrowUpward /> : <ArrowDownward />}
-                </Button>
-            </div>
+            {
+                isConnected ?
+                    <div className="space-between" >
+                        <motion.div
+                            initial={{ x: -100 }}
+                            animate={{ x: 0 }}
+                            exit={{ x: 100 }}>
+                            <Button
+                                style={{ fontSize: 10 }}
+                                disableElevation
+                                disabled={waitClaimhook?.isLoading || claimHook?.isLoading}
+                                onClick={handleCliamTokens}
+                                variant="contained"
+                            >
+                                CLAIM &nbsp;&nbsp;<span style={{ color: 'orangered' }}> {fmWei(AInfo?.data?.[2] as any)} COF </span>
+                                &nbsp;{!(waitClaimhook?.isLoading || claimHook?.isLoading) || <CircularProgress size={15} color="info" />}
+                            </Button>
+                        </motion.div>
 
+                        <Button
+                            style={{ fontSize: 10 }}
+                            disableElevation
+                            onClick={() => setShowingReferral(s => !s)} className="box-navigation-btn"
+                            color="warning" >
+                            EARN ${200}{ShowingReferral ? <ArrowUpward /> : <ArrowDownward />}
+                        </Button>
+                    </div>
+                    : <div className="space-between">
+                        <Button > &bull;  &bull;  &bull;  &bull; &bull; </Button>
+                        <Button color="warning" onClick={() => open?.()}>Connect Wallet {isOpen ? <CircularProgress color="success" size={10} /> : <ArrowForward />}</Button>
+                    </div>
+            }
         </motion.div>
     )
 
@@ -342,60 +358,68 @@ export default function WaitListModal() {
                     </Typography>
                 </div>
             </div>
-            <br />
-            <label className="small-text">
-                &nbsp;Enter Amount In ({precise(fmWei(String(EthBalance ?? 0)))}) {chain?.nativeCurrency?.symbol}
-            </label>
-            <Box className="alone-contianer " style={{ padding: '.4rem', marginTop: '.5rem' }}>
-                <div className="space-between">
-                    <div className="space-between" style={{ gap: 0, paddingInline: '.6rem' }}>
-                        {<label className="input-label">{cut(chain?.nativeCurrency?.symbol, 'right')}</label>}&nbsp;
-                        <Input
-                            disableUnderline
-                            type="number"
-                            value={amountEth}
-                            maxRows={1}
-                            onFocus={() => setFocused(a => true)}
-                            // error={String(selectedTrade.tradeAmount).length > 15 ? true : false}
-                            className="input-reading transparent-input"
-                            onChange={({ target: { value } }) => handleBuyAmoutnChange(Math.abs(Number(value)))}
-                            placeholder={`0.00 ${chain?.nativeCurrency?.symbol ?? 'Connect Your Wallet'}`}
-                        />
+            <hr style={{ opacity: .2 }} />
+            {
+                isConnected ?
+                    <>
+                        <label className="small-text">
+                            &nbsp;Enter Amount In ({precise(fmWei(String(EthBalance ?? 0)))}) {chain?.nativeCurrency?.symbol}
+                        </label>
+                        <Box className="alone-contianer " style={{ padding: '.4rem', marginTop: '.5rem' }}>
+                            <div className="space-between">
+                                <div className="space-between" style={{ gap: 0, paddingInline: '.6rem' }}>
+                                    {<label className="input-label">{cut(chain?.nativeCurrency?.symbol, 'right')}</label>}&nbsp;
+                                    <Input
+                                        disableUnderline
+                                        type="number"
+                                        value={amountEth}
+                                        maxRows={1}
+                                        onFocus={() => setFocused(a => true)}
+                                        // error={String(selectedTrade.tradeAmount).length > 15 ? true : false}
+                                        className="input-reading transparent-input"
+                                        onChange={({ target: { value } }) => handleBuyAmoutnChange(Math.abs(Number(value)))}
+                                        placeholder={`0.00 ${chain?.nativeCurrency?.symbol ?? 'Connect Your Wallet'}`}
+                                    />
+                                </div>
+                                {/*  */}
+                            </div>
+                        </Box>
+                        <div className="space-between" style={{ flexWrap: 'wrap' }}>
+                            <div className="space-between" >
+                                <Button
+                                    disableElevation
+                                    style={{ fontSize: 10 }}
+                                    // className="primary-button"
+                                    variant="contained"
+                                    onClick={() => handleBuyAmoutnChange(Number(fmWei(AInfo?.data?.[5] as any) ?? 0) / 100 * .1)}  >
+                                    {`min ~ ${chain?.nativeCurrency?.symbol ?? ''}   ${precise(Number(fmWei(AInfo?.data?.[5] as any) ?? 0) / 100 * .1, 4)}`}
+                                </Button>
+                                <ArrowForwardIos style={{ fontSize: 12 }} />
+                                <Button
+                                    disableElevation
+                                    style={{ fontSize: 10 }}
+                                    // className="primary-button"
+                                    variant="contained"
+                                    onClick={() => handleBuyAmoutnChange(Number(fmWei(AInfo?.data?.[6] as any) ?? 0) / 100 * .1)} >
+                                    {`max ~ ${chain?.nativeCurrency?.symbol ?? ''} ${precise(Number(fmWei(AInfo?.data?.[6] as any) ?? 0) / 100 * .1, 4)}`}
+                                </Button>
+                            </div>
+                            <Button
+                                disableElevation
+                                style={{ fontSize: 10 }}
+                                className="bg-red"
+                                disabled={waitBuyhook?.isLoading || buyHook?.isLoading || BuyAmount <= 0}
+                                variant="contained"
+                                onClick={handleBuyTokens} >
+                                Buy {BuyAmount} COF &nbsp;{!(waitBuyhook?.isLoading || buyHook?.isLoading) || <CircularProgress size={15} color="info" />}
+                            </Button>
+                        </div>
+                    </> : <div className="space-between">
+                        <Button > &bull;  &bull;  &bull;  &bull; &bull; </Button>
+                        <Button color="warning" onClick={() => open?.()}>Connect Wallet {isOpen ? <CircularProgress color="success" size={10} /> : <ArrowForward />}</Button>
                     </div>
-                    {/*  */}
-                </div>
-            </Box>
-            <div className="space-between" style={{ flexWrap: 'wrap' }}>
-                <div className="space-between" >
-                    <Button
-                        disableElevation
-                        style={{ fontSize: 10 }}
-                        // className="primary-button"
-                        variant="contained"
-                        onClick={() => handleBuyAmoutnChange(Number(fmWei(AInfo?.data?.[5] as any) ?? 0) / 100 * .1)}  >
-                        {`min ~ ${chain?.nativeCurrency?.symbol ?? ''}   ${precise(Number(fmWei(AInfo?.data?.[5] as any) ?? 0) / 100 * .1, 4)}`}
-                    </Button>
-                    <ArrowForwardIos style={{ fontSize: 12 }} />
-                    <Button
-                        disableElevation
-                        style={{ fontSize: 10 }}
-                        // className="primary-button"
-                        variant="contained"
-                        onClick={() => handleBuyAmoutnChange(Number(fmWei(AInfo?.data?.[6] as any) ?? 0) / 100 * .1)} >
-                        {`max ~ ${chain?.nativeCurrency?.symbol ?? ''} ${precise(Number(fmWei(AInfo?.data?.[6] as any) ?? 0) / 100 * .1, 4)}`}
-                    </Button>
-                </div>
-                <Button
-                    disableElevation
-                    style={{ fontSize: 10 }}
-                    className="bg-red"
-                    disabled={waitBuyhook?.isLoading || buyHook?.isLoading || BuyAmount <= 0}
-                    variant="contained"
-                    onClick={handleBuyTokens} >
-                    Buy {BuyAmount} COF &nbsp;{!waitBuyhook?.isLoading || <CircularProgress size={15} color="info" />}
-                </Button>
+            }
 
-            </div>
         </motion.div >
     )
 
@@ -434,6 +458,7 @@ export default function WaitListModal() {
                 className="dialog-content"
                 animate={{ y: 0 }}
                 initial={{ y: -100 }}
+                style={{ background: images?.combo_icon }}
             >
                 <div className="space-between">
                     <h3 className="h3-headline">PARTIBOARD <Button>  {cut(address)}</Button></h3>
@@ -484,6 +509,20 @@ export default function WaitListModal() {
                         </a>
                         <a className="socila-link" target="_blank" href="https://twitter.com/ComboDex">
                             <img src={images?.twitter_icon} alt="TG" className="social-icon" />
+                        </a>
+                        <a className="socila-link" >
+
+                        </a>
+                    </div>
+                    <div className="space-between" style={{ justifyContent: 'right' }}>
+                        <a className="socila-link"    >
+
+                        </a>
+                        <a className="socila-link" >
+
+                        </a>
+                        <a className="socila-link" >
+
                         </a>
                     </div>
                 </div>
