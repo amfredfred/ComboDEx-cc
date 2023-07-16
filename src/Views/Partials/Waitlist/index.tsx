@@ -12,6 +12,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { COMBO_ABIs } from "../../../Ethereum/ABIs/index.ts";
 import { useADDR } from "../../../Ethereum/Addresses";
 import { Web3NetworkSwitch } from '@web3modal/react'
+import useAssets from "../../../Assets";
 
 dayjs.extend(relativeTime)
 
@@ -19,6 +20,7 @@ export default function WaitListModal() {
     const [params, storeParams] = useLocalStorage<IParams>('@Params', Params)
     const [clipBoardContent, copyToClipboard] = useCopyToClipboard()
     const { address, isConnected } = useAccount()
+    const { images } = useAssets()
     const { chain, } = useNetwork()
     const provider = useProvider()
     const ADDR = useADDR(chain?.id);
@@ -474,6 +476,17 @@ export default function WaitListModal() {
                 {params.waitlist.openTab === 'airdrop' && AirdropPanel}
                 {params.waitlist.openTab === 'ICO' && ICOPanel}
                 {params.waitlist.openTab === 'progress' && ProgressPanel}
+                <div className="socilal-panel">
+                    <h3 className="headline-3">JOIN US ON</h3>
+                    <div className="space-between" style={{ justifyContent: 'left' }}>
+                        <a className="socila-link" target="_blank" href="https://t.me/combodex_chat">
+                            <img src={images?.telegram_icon} alt="TG" className="social-icon" />
+                        </a>
+                        <a className="socila-link" target="_blank" href="https://twitter.com/ComboDex">
+                            <img src={images?.twitter_icon} alt="TG" className="social-icon" />
+                        </a>
+                    </div>
+                </div>
             </motion.div>
         </div>
     )
