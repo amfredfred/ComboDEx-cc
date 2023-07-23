@@ -192,7 +192,7 @@ export default () => {
                                 <div className="space-between">
                                     <input type="number" className="input-reading"
                                         onChange={(i: any) => setLockPeriod(o => (i.target.valueAsNumber >= 0) ? i.target.value : o)}
-                                        value={lockPeriod} placeholder={precise((userDatas as any)?.[6] / 3600)} />
+                                        value={lockPeriod} placeholder={precise(((userDatas as any)?.[6] ?? 0 / 3600))} />
                                     <Button children='hours' />
                                 </div>
                             </Box>
@@ -209,8 +209,8 @@ export default () => {
                                     <strong className="path-name" >
                                         {
                                             Number(String((userDatas as any)?.[8])) > 0 ? "YOUR POTENTIAL LOSS"
-                                                : (userDatas as any)?.[7] * 1000 < Date.now() ? "Withdraw Funds"
-                                                    : dayjs(Date.now()).to((userDatas as any)?.[7] * 1000)
+                                                : (userDatas as any)?.[7] ?? 0 * 1000 < Date.now() ? "Withdraw Funds"
+                                                    : dayjs(Date.now()).to((userDatas as any)?.[7] ?? 0 * 1000)
                                         }
                                     </strong>
                                     <Timelapse />
