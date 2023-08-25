@@ -14,7 +14,7 @@ import {
 } from "wagmi";
 import { useADDR } from "../../../Ethereum/Addresses";
 import { useEffect, useState } from 'react'
-import { cut, fmWei, isAddress, percentageof, precise, priceDifference, strEqual, sub, toBN, toUpper, toWei } from "../../../Helpers";
+import { cut, fmWei, isAddress, percentageof, precise, priceDifference, strEqual, sub, toBN, toWei } from "../../../Helpers";
 import { motion } from 'framer-motion'
 import { COMBO_ABIs } from '../../../Ethereum/ABIs/index.ts'
 import { NumCompact } from "../../../Helpers";

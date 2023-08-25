@@ -74,7 +74,7 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
         abi: COMBO_ABIs,
         functionName: 'allowance',
         args: [address, ADDR['PRICE_ORACLEA']],
-        enabled: !strEqual(arbitrade?.dexes?.[0]?.paths?.[0]?.address, ADDR?.WETH_ADDRESSA),
+        enabled: !strEqual(arbitrade?.dexes?.[0]?.paths?.[0]?.address as any, ADDR?.WETH_ADDRESSA),
         cacheTime: 0,
         watch: true,
     })
@@ -93,7 +93,7 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
     })
 
     const hasAllowance = () => {
-        if (!strEqual(arbitrade?.dexes?.[0]?.paths?.[0]?.address, ADDR?.WETH_ADDRESSA))
+        if (!strEqual(arbitrade?.dexes?.[0]?.paths?.[0]?.address as any, ADDR?.WETH_ADDRESSA))
             return Number(fmWei(tokenAllowance as any, arbitrade?.dexes?.[0]?.paths?.[0]?.decimals))
         return 1
     }

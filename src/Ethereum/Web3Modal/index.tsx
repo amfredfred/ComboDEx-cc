@@ -5,7 +5,6 @@ import { arbitrum, mainnet, polygon, bscTestnet, bsc } from 'wagmi/chains'
 
 import { publicProvider } from "@wagmi/core/providers/public";
 
-// import { UAuthWagmiConnector } from "@uauth/wagmi";
 import { MetaMaskConnector } from "@wagmi/core/connectors/metaMask";
 import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
 
