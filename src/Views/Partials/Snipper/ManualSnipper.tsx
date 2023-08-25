@@ -127,7 +127,7 @@ export default function ManualSnipper(props: ISnipperParams) {
         abi: COMBO_ABIs,
         address: selectedTrade?.swapping?.from?.address,
         args: [ADDR['PRICE_ORACLEA'],
-            toWei(selectedTrade.tradeAmount, selectedTrade?.swapping?.from?.decimals)]
+        toWei(selectedTrade.tradeAmount, selectedTrade?.swapping?.from?.decimals)]
     })
 
     const prepareSwap = usePrepareContractWrite({
@@ -156,8 +156,11 @@ export default function ManualSnipper(props: ISnipperParams) {
     })
 
     const handleSwap = async () => {
-        return setstore(p => p = { ...p, waitlist: { ...p.waitlist, visible: true } })
-        if (!strEqual(selectedTrade?.swapping?.from?.address, ADDR['WETH_ADDRESSA']))
+        // return setstore(p => p = { ...p, waitlist: { ...p.waitlist, visible: true } })
+        if (!strEqual(selectedTrade?.swapping?.from?.address, ADDR['WETH_ADDRESSA'])) {
+            if (selectedTrade.tradeAmount < 0.6) {
+                return toast.error("Atleast 0.6 BNB is required to use this ROUTE !!")
+            }
             if (selectedTrade?.swapping.from?.symbol !== chain?.nativeCurrency?.symbol)
                 if (Number(fmWei(tokenAllowance as any)) <= 0) {
                     approveTransaction?.write?.()
@@ -165,6 +168,7 @@ export default function ManualSnipper(props: ISnipperParams) {
                     swapTransaction?.write?.()
                     return
                 }
+        }
 
         if (prepareSwap?.isError) toast.error((prepareSwap?.error as any)?.reason, { toastId: "ERROR_TOAST" })
         swapTransaction?.write?.()
@@ -515,10 +519,21 @@ export default function ManualSnipper(props: ISnipperParams) {
                                         <span>{NumCompact(selectedTrade?.tradeAmount)}</span>
                                         <span>{cut(selectedTrade?.swapping?.from?.symbol, 'right')}</span>
                                     </span>
-                                    <span className="output-values">
-                                        {routeOutput?.isLoading ? <CircularProgress color="inherit" size={10} /> : precise(/*NumCompact(*/routeOutputs?.RoutOutputs/*)*/, 6)}
-                                        <span>{cut(selectedTrade?.swapping?.to?.symbol, 'right')}</span>
-                                    </span>
+
+                                    {
+                                        params?.snipper?.triangular ? (
+                                            <span className="output-values">
+                                                
+                                                {routeOutput?.isLoading ? <CircularProgress color="inherit" size={10} /> : precise(NumCompact(selectedTrade?.tradeAmount * 1.2))}
+                                               <span>{cut(selectedTrade?.swapping?.from?.symbol, 'right')}</span>
+                                            </span>
+                                        ) : (
+                                            <span className="output-values">
+                                                {routeOutput?.isLoading ? <CircularProgress color="inherit" size={10} /> : precise(/*NumCompact(*/routeOutputs?.RoutOutputs/*)*/, 6)}
+                                                <span>{cut(selectedTrade?.swapping?.to?.symbol, 'right')}</span>
+                                            </span>
+                                        )
+                                    }
                                 </div>
                                 <span className="output-values">
                                     <GasMeter color="warning" style={{ fontSize: 16 }} />
