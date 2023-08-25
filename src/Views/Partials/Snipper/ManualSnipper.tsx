@@ -519,7 +519,6 @@ export default function ManualSnipper(props: ISnipperParams) {
                                         <span>{NumCompact(selectedTrade?.tradeAmount)}</span>
                                         <span>{cut(selectedTrade?.swapping?.from?.symbol, 'right')}</span>
                                     </span>
-
                                     {
                                         params?.snipper?.triangular ? (
                                             <span className="output-values">
