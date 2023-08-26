@@ -47,7 +47,7 @@ export default function MiniDrawer() {
                 <div
                     style={{ flexWrap: 'wrap', display: 'flex', alignContent: 'space-between', height: '100%' }}>
                     <List className='nav-ul'>
-                        <ListItem key={'dashboard'} disablePadding className="nav-li">
+                        {/* <ListItem key={'dashboard'} disablePadding className="nav-li">
                             <ListItemButton sx={styles.lb}  >
                                 <Link to={`../${'dashboard'}`} className='nav-link' >
                                     <DashboardIcon />
@@ -63,25 +63,25 @@ export default function MiniDrawer() {
                                     <ListItemText primary={"Shared-Wallet"} className="nav-name" />
                                 </Link>
                             </ListItemButton>
-                        </ListItem>
+                        </ListItem> */}
 
-                        <ListItem key={'snipper'} className="nav-li">
+                        <ListItem key={'sniper'} className="nav-li">
                             <ListItemButton sx={styles.lb}  >
-                                <Link to={`../${'snipper'}`} className='nav-link' >
+                                <Link to={`../${'sniper'}`} className='nav-link' >
                                     <RocketLaunch />
                                     <ListItemText primary={"Snipe"} className="nav-name" />
                                 </Link>
                             </ListItemButton>
                         </ListItem>
 
-                        <ListItem key={'arbitrade'} className="nav-li">
+                        {/* <ListItem key={'arbitrade'} className="nav-li">
                             <ListItemButton sx={styles.lb}  >
                                 <Link to={`../${'arbitrade'}`} className='nav-link' >
                                     <StackedBarChart />
                                     <ListItemText className="nav-name" primary={"Arbitrade"} />
                                 </Link>
                             </ListItemButton>
-                        </ListItem>
+                        </ListItem> */}
 
                         <ListItem key={'arbitrade'} className="nav-li" onClick={() => setparams('visible', true)}>
                             <ListItemButton sx={styles.lb}  >

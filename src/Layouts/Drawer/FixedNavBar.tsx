@@ -64,30 +64,30 @@ export default function FixedNavBar() {
                     </Link>
                 </ListItemButton>
 
-                <ListItemButton sx={styles.lb}    >
+                {/* <ListItemButton sx={styles.lb}    >
                     <Link to={`../${'dashboard'}`} style={styles.lbl}>
                         <DashboardIcon />
                         <ListItemText primary={"Dashboard"} sx={{ opacity: open ? 1 : 0 }} />
                     </Link>
-                </ListItemButton>
+                </ListItemButton> */}
 
-                <ListItemButton sx={styles.lb}  >
+                {/* <ListItemButton sx={styles.lb}  >
                     <Link to={`../${'shared-wallet'}`} style={styles.lbl}>
                         <AccountBalanceIcon />
                         <ListItemText primary={"Shared Wallet"} sx={{ opacity: open ? 1 : 0 }} />
                     </Link>
-                </ListItemButton>
+                </ListItemButton> */}
 
-                <ListItemButton sx={styles.lb}  >
+                {/* <ListItemButton sx={styles.lb}  >
                     <Link to={`../arbitrade`} style={styles.lbl}>
                         <StackedBarChart />
                         <ListItemText primary={"Arbitrade"} sx={{ opacity: open ? 1 : 0 }} />
                     </Link>
-                </ListItemButton>
+                </ListItemButton> */}
 
 
                 <ListItemButton sx={styles.lb}  >
-                    <Link to={`../${'snipper'}`} style={styles.lbl}>
+                    <Link to={`../${'sniper'}`} style={styles.lbl}>
                         <RocketLaunch />
                         <ListItemText primary={"Snipe"} sx={{ opacity: open ? 1 : 0 }} />
                     </Link>
