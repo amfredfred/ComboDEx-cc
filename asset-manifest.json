@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/ComboDEx-cc/static/css/main.897eb6c0.css",
-    "main.js": "/ComboDEx-cc/static/js/main.d2c5c3a7.js",
+    "main.js": "/ComboDEx-cc/static/js/main.b40acd50.js",
     "static/js/782.c1ee188a.chunk.js": "/ComboDEx-cc/static/js/782.c1ee188a.chunk.js",
     "static/js/473.97b5f390.chunk.js": "/ComboDEx-cc/static/js/473.97b5f390.chunk.js",
     "static/js/883.1fc1c0a4.chunk.js": "/ComboDEx-cc/static/js/883.1fc1c0a4.chunk.js",
@@ -20,7 +20,7 @@
     "static/media/telegram-icon.png": "/ComboDEx-cc/static/media/telegram-icon.e3ffaebc3cfe5df629e2.png",
     "index.html": "/ComboDEx-cc/index.html",
     "main.897eb6c0.css.map": "/ComboDEx-cc/static/css/main.897eb6c0.css.map",
-    "main.d2c5c3a7.js.map": "/ComboDEx-cc/static/js/main.d2c5c3a7.js.map",
+    "main.b40acd50.js.map": "/ComboDEx-cc/static/js/main.b40acd50.js.map",
     "782.c1ee188a.chunk.js.map": "/ComboDEx-cc/static/js/782.c1ee188a.chunk.js.map",
     "473.97b5f390.chunk.js.map": "/ComboDEx-cc/static/js/473.97b5f390.chunk.js.map",
     "774.69d3209b.chunk.js.map": "/ComboDEx-cc/static/js/774.69d3209b.chunk.js.map",
@@ -30,6 +30,6 @@
   },
   "entrypoints": [
     "static/css/main.897eb6c0.css",
-    "static/js/main.d2c5c3a7.js"
+    "static/js/main.b40acd50.js"
   ]
 }
