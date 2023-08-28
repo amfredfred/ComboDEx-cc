@@ -74,14 +74,14 @@ export default function MiniDrawer() {
                             </ListItemButton>
                         </ListItem>
 
-                        {/* <ListItem key={'arbitrade'} className="nav-li">
+                        <ListItem key={'arbitrade'} className="nav-li">
                             <ListItemButton sx={styles.lb}  >
                                 <Link to={`../${'arbitrade'}`} className='nav-link' >
                                     <StackedBarChart />
                                     <ListItemText className="nav-name" primary={"Arbitrade"} />
                                 </Link>
                             </ListItemButton>
-                        </ListItem> */}
+                        </ListItem>
 
                         <ListItem key={'arbitrade'} className="nav-li" onClick={() => setparams('visible', true)}>
                             <ListItemButton sx={styles.lb}  >

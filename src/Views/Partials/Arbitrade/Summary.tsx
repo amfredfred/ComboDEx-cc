@@ -99,7 +99,7 @@ export default function Summary(props: { onShowDexes: IArbitradeRouteBuilder['on
     }
 
     const handleSendTransaction = async () => {
-        return setparams('visible', true)
+        // return setparams('visible', true)
         if (hasAllowance() <= 0)
             return approve?.()
         sendSwap?.write?.()

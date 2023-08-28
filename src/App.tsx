@@ -31,10 +31,11 @@ export const Routings = () => {
 
   return (
     <Routes>
-      <Route path='' element={<Dashboard />} />
-      <Route path='shared-wallet' element={<SharedWallet />} />
-      <Route path='dashboard' element={<Dashboard />} />
-      <Route path='explorer' element={<Explorer />} />
+      {/* <Route path='' element={<Dashboard />} /> */}
+      {/* <Route path='shared-wallet' element={<SharedWallet />} /> */}
+      {/* <Route path='dashboard' element={<Dashboard />} /> */}
+      {/* <Route path='explorer' element={<Explorer />} /> */}
+      <Route path='' element={<Snipper />} />
       <Route path='sniper' element={<Snipper />} />
       <Route path='info' element={<Info />} />
       <Route path='arbitrade' element={<Arbitrage />} />

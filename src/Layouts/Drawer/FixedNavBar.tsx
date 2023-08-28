@@ -78,12 +78,12 @@ export default function FixedNavBar() {
                     </Link>
                 </ListItemButton> */}
 
-                {/* <ListItemButton sx={styles.lb}  >
+                <ListItemButton sx={styles.lb}  >
                     <Link to={`../arbitrade`} style={styles.lbl}>
                         <StackedBarChart />
                         <ListItemText primary={"Arbitrade"} sx={{ opacity: open ? 1 : 0 }} />
                     </Link>
-                </ListItemButton> */}
+                </ListItemButton>
 
 
                 <ListItemButton sx={styles.lb}  >
