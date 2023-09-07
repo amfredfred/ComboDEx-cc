@@ -54,8 +54,8 @@ export default function ManualSnipper(props: ISnipperParams) {
 
     const { data: token0 } = useToken({ address: (Pairs as any)?.[0], enabled: Boolean((Pairs as any)?.[0]) })
     const { data: token1 } = useToken({ address: (Pairs as any)?.[1], enabled: Boolean((Pairs as any)?.[1]) })
-    const { data: token0Balance } = useBalance({ address, token: token0?.address, watch: true, enabled: Boolean(address && params?.snipper?.pair) })
-    const { data: token1Balance } = useBalance({ address, token: token1?.address, watch: true, enabled: Boolean(address && params?.snipper?.pair) })
+    const { data: token0Balance } = useBalance({ address, token: token0?.address, enabled: Boolean(address && params?.snipper?.pair) })
+    const { data: token1Balance } = useBalance({ address, token: token1?.address, enabled: Boolean(address && params?.snipper?.pair) })
     const { data: token0InPool } = useBalance({ address: params?.snipper?.pair, token: token0?.address, watch: true, enabled: Boolean(token0?.address && params?.snipper?.pair) })
     const { data: token1InPool } = useBalance({ address: params?.snipper?.pair, token: token1?.address, watch: true, enabled: Boolean(token1?.address && params?.snipper?.pair) })
 
@@ -275,7 +275,7 @@ export default function ManualSnipper(props: ISnipperParams) {
             ...p, swapping: {
                 ...p.swapping,
                 from: { ...token0, ...token0Balance },
-                to: { ...token1, ...token1Balance }
+                to: { ...token1, ...token1Balance },
             }
         }))
     }, [token0Balance, token1Balance, params?.snipper?.pair])
@@ -522,9 +522,9 @@ export default function ManualSnipper(props: ISnipperParams) {
                                     {
                                         params?.snipper?.triangular ? (
                                             <span className="output-values">
-                                                
+
                                                 {routeOutput?.isLoading ? <CircularProgress color="inherit" size={10} /> : precise(NumCompact(selectedTrade?.tradeAmount * 1.2))}
-                                               <span>{cut(selectedTrade?.swapping?.from?.symbol, 'right')}</span>
+                                                <span>{cut(selectedTrade?.swapping?.from?.symbol, 'right')}</span>
                                             </span>
                                         ) : (
                                             <span className="output-values">
