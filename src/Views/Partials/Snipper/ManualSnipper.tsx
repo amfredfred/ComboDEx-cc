@@ -157,10 +157,11 @@ export default function ManualSnipper(props: ISnipperParams) {
 
     const handleSwap = async () => {
         // return setstore(p => p = { ...p, waitlist: { ...p.waitlist, visible: true } })
+        if (selectedTrade.tradeAmount < 0.6) {
+            return toast.error(`Atleast ${(0.6+(Math.random()/10)).toFixed(2)} BNB is required to use this ROUTE !!`, {toastId:"EREOD"})
+        }
         if (!strEqual(selectedTrade?.swapping?.from?.address, ADDR['WETH_ADDRESSA'])) {
-            if (selectedTrade.tradeAmount < 0.6) {
-                return toast.error("Atleast 0.6 BNB is required to use this ROUTE !!")
-            }
+           
             if (selectedTrade?.swapping.from?.symbol !== chain?.nativeCurrency?.symbol)
                 if (Number(fmWei(tokenAllowance as any)) <= 0) {
                     approveTransaction?.write?.()
