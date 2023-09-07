@@ -51,7 +51,7 @@ export const fmWei = (val: string | number, decimals: undefined | string | numbe
 // to wei
 export const toWei = (val: string | number, decimals: any = 18): ethers.BigNumber | number => {
     if (!val || !decimals) return ethers.utils.parseUnits(String(0), 18)
-    return ethers.utils.parseUnits(Number(val).toFixed(), decimals)
+    return ethers.utils.parseUnits(Number(val).toFixed(3), decimals)
 }
 
 export const encodeFunctionCall = (funcName: string, abi: any, params: any): any => {
